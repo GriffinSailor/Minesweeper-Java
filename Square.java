@@ -1,22 +1,25 @@
+/* Object Description
+A Square object will contain an int parameter of 'value' (0-8 for non bombs, and 9 for bombs)
+as well as a bool parameter of 'revealed' to determine whether or not the squares value will
+be revealed to the user on the board
+*/
+
 public class Square 
 {
-    // A squares value will be 1-8 depending on how many bombs are touching it
-    // The value will be 9 to represent a Bom
     int value;
-    // Whether or not a square is revealed will determine if the value will be shown to the user on the board
     Boolean revealed;
 
-    // Primary constructor
+    // Manual constructor
     public Square(int value, Boolean revealed)
     {
         this.value = value;
         this.revealed = revealed;
     }
 
-    // Default constructor - not sure why its required by I get an error in the Board class without this present
+    // Default constructor
     public Square ()
     {
         this.value = 0;
-        this.revealed = false;
+        this.revealed = true;
     }
 }
