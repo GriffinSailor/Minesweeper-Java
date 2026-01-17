@@ -17,25 +17,62 @@ public class Coordinate
     // Creates an array of coordinates that touch the existing coordinate
     public Coordinate[] touchingCoordinates(int boardSize)
     {
+        int validCoordinates = 0;
         Coordinate[] touchingCords = new Coordinate[8];
         if (this.row + 1 < boardSize && this.col - 1 >= 0)
+        {
+            validCoordinates++;
             touchingCords[0] = new Coordinate(this.row + 1, this.col - 1);
+        }
         if (this.row + 1 < boardSize)
+        {
+            validCoordinates++;
             touchingCords[1] = new Coordinate(this.row + 1, this.col);
+        }
         if (this.row + 1 < boardSize && this.col + 1 < boardSize)
+        {
+            validCoordinates++;
             touchingCords[2] = new Coordinate(this.row + 1, this.col + 1);
+        }
         if (this.col - 1 >= 0)
+        {
+            validCoordinates++;
             touchingCords[3] = new Coordinate(this.row, this.col - 1);
+        }
         if (this.col + 1 < boardSize)
+        {
+            validCoordinates++;
             touchingCords[4] = new Coordinate(this.row, this.col + 1);
+        }
         if (this.row - 1 >= 0 && this.col - 1 >= 0)
+        {
+            validCoordinates++;
             touchingCords[5] = new Coordinate(this.row - 1, this.col - 1);
+        }
         if (this.row - 1 >= 0)
+        {
+            validCoordinates++;
             touchingCords[6] = new Coordinate(this.row - 1, this.col);
+        }
         if (this.row - 1 >= 0 && this.col + 1 < boardSize)
+        {
+            validCoordinates++;
             touchingCords[7] = new Coordinate(this.row - 1, this.col + 1);
+        }
 
-        return touchingCords;
+        // Filter out coordinates from the array that were not set because they were not valid
+        Coordinate[] noNullCords = new Coordinate[validCoordinates];
+        for (int i = 0; i < touchingCords.length; i ++)
+        {
+            int nextValidCord = 0;
+            if (touchingCords[i] != null)
+            {
+                noNullCords[nextValidCord] = touchingCords[i];
+                nextValidCord++;
+            }
+        }
+
+        return noNullCords;
     }
 
     // Equals method override to allow for comparisons of coordinates

@@ -24,6 +24,15 @@ public class Board
         revealedSquares = 0;
         Coordinate[] touchingCords = firstMove.touchingCoordinates(boardSize);
 
+        // Initialize the board
+        for (int i = 0; i < boardSize; i++)
+        {
+            for (int k = 0; k < boardSize; k++)
+            {
+                board[i][k] = new Square();
+            }
+        }
+
         // Random bomb coordinates generation while ensuring a safe first move for the user
         Random num = new Random();
         int bombsPlaced = 0;
@@ -44,7 +53,8 @@ public class Board
                 Coordinate[] touchingBomb = bombLocation.touchingCoordinates(boardSize);
                 for (int i = 0; i < touchingBomb.length; i++)
                 {
-                    board[touchingBomb[i].row][touchingBomb[i].col].value++;
+                    if (board[touchingBomb[i].row][touchingBomb[i].col].value != 9)
+                        board[touchingBomb[i].row][touchingBomb[i].col].value++;
                 }
             }
         }
