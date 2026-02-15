@@ -110,4 +110,42 @@ public class Board
                 System.out.print(" " + (i + 1) + " ");
         }
     }
+
+    // Print a blank board when collecting the users first move. 
+    // This is a separate function since the first move will not be able to 
+    // reference an actual Board object since one wont be generated at that point
+    public static void printBlankBoard (int boardSize)
+    {
+        System.out.println();
+        for (int row = 0; row < boardSize; row++)
+        {
+            // Print the row numbers
+            if ((boardSize - row) >= 10)
+                System.out.print(((boardSize) - row) + "|");
+            else
+                System.out.print(((boardSize) - row) + " |");
+
+            // Print the actual square values for the current row
+            for (int col = 0;  col < boardSize; col++)
+            {
+                System.out.print(" x ");
+            }
+            System.out.println();
+        }
+        // Print the bottom line for the board and the numbers on the x axis
+        System.out.print("   ");
+        for (int i = 0; i < (3 * boardSize); i++)
+        {
+            System.out.print("-");
+        }
+        System.out.print("\n   ");
+        for (int i = 0; i < boardSize; i++)
+        {
+            if (i + 1 >= 10)
+                System.out.print((i + 1) + " ");
+            else
+                System.out.print(" " + (i + 1) + " ");
+        }
+        System.out.println();
+    }
 }
