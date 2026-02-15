@@ -60,19 +60,7 @@ public class Coordinate
             touchingCords[7] = new Coordinate(this.row - 1, this.col + 1);
         }
 
-        // Filter out coordinates from the array that were not set because they were not valid
-        Coordinate[] noNullCords = new Coordinate[validCoordinates];
-        for (int i = 0; i < touchingCords.length; i ++)
-        {
-            int nextValidCord = 0;
-            if (touchingCords[i] != null)
-            {
-                noNullCords[nextValidCord] = touchingCords[i];
-                nextValidCord++;
-            }
-        }
-
-        return noNullCords;
+        return touchingCords;
     }
 
     // Equals method override to allow for comparisons of coordinates
