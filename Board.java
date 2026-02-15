@@ -8,6 +8,7 @@ as an int parameter for bombCount (how many bombs will be randomly placed).
 The first move Coordinate is to allow the board to protect the players first move and 
 avoid an immediate game over
 */
+
 public class Board 
 {
     int boardSize;
@@ -29,7 +30,8 @@ public class Board
         {
             for (int k = 0; k < boardSize; k++)
             {
-                board[i][k] = new Square(0, false);
+                // TODO: set Revealed to False after testing
+                board[i][k] = new Square();
             }
         }
 
@@ -74,6 +76,7 @@ public class Board
     public void printBoard ()
     {
         // Print the board starting at the top row and moving down
+        System.out.println();
         for (int row = 0; row < this.boardSize; row++)
         {
             // Print the row numbers
@@ -101,7 +104,10 @@ public class Board
         System.out.print("\n   ");
         for (int i = 0; i < this.boardSize; i++)
         {
-            System.out.print(" " + (i + 1) + " ");
+            if (i + 1 >= 10)
+                System.out.print((i + 1) + " ");
+            else
+                System.out.print(" " + (i + 1) + " ");
         }
     }
 }
