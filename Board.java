@@ -29,7 +29,7 @@ public class Board
         {
             for (int k = 0; k < boardSize; k++)
             {
-                board[i][k] = new Square();
+                board[i][k] = new Square(0, false);
             }
         }
 
@@ -41,10 +41,14 @@ public class Board
             Coordinate bombLocation = new Coordinate(num.nextInt(boardSize), num.nextInt(boardSize));
 
             if (board[bombLocation.row][bombLocation.col].value != 9 && !bombLocation.equals(firstMove) 
-                && !bombLocation.equals(touchingCords[0]) && !bombLocation.equals(touchingCords[1]) 
-                && !bombLocation.equals(touchingCords[2]) && !bombLocation.equals(touchingCords[3]) 
-                && !bombLocation.equals(touchingCords[4]) && !bombLocation.equals(touchingCords[5]) 
-                && !bombLocation.equals(touchingCords[6]) && !bombLocation.equals(touchingCords[7]))
+                && (touchingCords[0] == null || !bombLocation.equals(touchingCords[0]))
+                && (touchingCords[1] == null || !bombLocation.equals(touchingCords[1]))
+                && (touchingCords[2] == null || !bombLocation.equals(touchingCords[2])) 
+                && (touchingCords[3] == null || !bombLocation.equals(touchingCords[3]))
+                && (touchingCords[4] == null || !bombLocation.equals(touchingCords[4]))
+                && (touchingCords[5] == null || !bombLocation.equals(touchingCords[5]))
+                && (touchingCords[6] == null || !bombLocation.equals(touchingCords[6])) 
+                && (touchingCords[7] == null || !bombLocation.equals(touchingCords[7])))
             {
                 board[bombLocation.row][bombLocation.col].value = 9;
                 bombsPlaced++;
@@ -53,7 +57,7 @@ public class Board
                 Coordinate[] touchingBomb = bombLocation.touchingCoordinates(boardSize);
                 for (int i = 0; i < touchingBomb.length; i++)
                 {
-                    if (board[touchingBomb[i].row][touchingBomb[i].col].value != 9)
+                    if (touchingBomb[i] != null && board[touchingBomb[i].row][touchingBomb[i].col].value != 9)
                         board[touchingBomb[i].row][touchingBomb[i].col].value++;
                 }
             }
@@ -82,13 +86,22 @@ public class Board
             for (int col = 0;  col < this.boardSize; col++)
             {
                 if (this.board[row][col].revealed)
-                    System.out.print(this.board[row][col].value);
+                    System.out.print(" " + this.board[row][col].value + " ");
                 else
-                    System.out.print("  x");
+                    System.out.print(" x ");
             }
             System.out.println();
         }
-        // TODO: figure out how to multiple a print statement like in python. theres gotta be something besides a for loop
-        System.out.print(".  --------------------");
+        // Print the bottom line for the board and the numbers on the x axis
+        System.out.print("   ");
+        for (int i = 0; i < (3 * this.boardSize); i++)
+        {
+            System.out.print("-");
+        }
+        System.out.print("\n   ");
+        for (int i = 0; i < this.boardSize; i++)
+        {
+            System.out.print(" " + (i + 1) + " ");
+        }
     }
 }
