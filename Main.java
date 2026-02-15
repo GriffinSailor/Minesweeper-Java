@@ -1,4 +1,3 @@
-import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class Main extends Board
@@ -15,22 +14,20 @@ public class Main extends Board
             System.out.println("What difficulty would you prefer?\n1. Easy\n2. Medium\n3. Hard\n");
             String rawDifficultySelect = userInput.nextLine();
 
-            // TODO: get this try catch to work, currently it just errors when it should be catching
+            // Set the difficulty
             try 
             {
                 difficulty = Integer.parseInt(rawDifficultySelect);
-                break;
+                if (difficulty == 1 || difficulty == 2 || difficulty == 3)
+                        difficultySelected = true;
+                else
+                    System.out.println("Invalid Selection - Please only enter a a valid difficulty choice (1-3)");
+
             } 
-            catch(InputMismatchException mme) 
+            catch (Exception invalidDataType) 
             {
                 System.out.println("Invalid Selection - Please only enter a number to select a difficulty");
             }
-
-            // Set the difficulty level
-            if (difficulty == 1 || difficulty == 2 || difficulty == 3)
-                    difficultySelected = true;
-            else
-                System.out.println("Invalid Selection - Please only enter a a valid difficulty choice (1-3)");
         }
 
         // First Diffuclty = 10 Bombs in a Boardsize of 10
