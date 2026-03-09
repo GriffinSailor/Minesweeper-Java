@@ -30,8 +30,7 @@ public class Board
         {
             for (int k = 0; k < boardSize; k++)
             {
-                // TODO: set Revealed to False after testing
-                board[i][k] = new Square();
+                board[i][k] = new Square(0, false);
             }
         }
 
@@ -147,5 +146,35 @@ public class Board
                 System.out.print(" " + (i + 1) + " ");
         }
         System.out.println();
+    }
+
+    // Reveal a square as requested by the player
+    // Return a 0 for a passed move and 1 for a bomb
+    // Input validation should have taken place before the function call. Assume the values are valid
+    public int makeMove(Coordinate move)
+    {
+        int col = move.col;
+        int row = move.row;
+
+        if (this.board[row][col].value == 0)
+        {
+            // Branch out revealed squares if its a zero block
+            Coordinate[] touchingCords = move.touchingCoordinates(boardSize);
+            for (int i = 0; i < touchingCords.length; i++)
+            {
+                if (touchingCords[i] != null)
+                {
+                    this.board[touchingCords[i].row][touchingCords[i].col].revealed = true;
+
+                    // TODO: finish implementing the branching out 
+                }
+            }
+
+            return 0;
+        }
+        else if (this.board[row][col].value != 9)
+            return 0;
+        else
+            return 1;
     }
 }

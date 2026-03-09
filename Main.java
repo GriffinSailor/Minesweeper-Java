@@ -4,15 +4,21 @@ public class Main extends Board
 {
     public static void main (String[] Args)
     {
-        // Initialize variables
+        // User input Scanner for the game
+        Scanner userInput = new Scanner(System.in);
+
+        // Variables user to structure the actual game board
         Board gameBoard;
+        Coordinate firstMoveCord = new Coordinate (1, 1);
+        Coordinate moveCord = new Coordinate (1, 1);
         int boardSize = 0;
         int bombCount = 0;
+
+        // Variables to determine current stage of the game
         Boolean gameBegun = false;
         Boolean gameLost = false;
         Boolean difficultySelected = false;
         int difficulty = 0;
-        Scanner userInput = new Scanner(System.in);
 
         // Have user select the difficulty
         while (!difficultySelected)
@@ -70,8 +76,8 @@ public class Main extends Board
                     System.out.println("\nInvalid Move - Keep the x and y values in the range of the board\n");
                 else
                 {
-                    Coordinate firstMoveCord = new Coordinate(row, col);
-                    gameBoard = new Board (boardSize, bombCount, firstMoveCord);
+                    firstMoveCord.col = col;
+                    firstMoveCord.row = row;
                     gameBegun = true;
                 }
             }
@@ -81,9 +87,37 @@ public class Main extends Board
             }
         }
 
+        // Make the official game board and send the user into the gameplay loop
+        gameBoard = new Board (boardSize, bombCount, firstMoveCord);
+
         while (!gameLost)
         {
             // TODO: implement the actual gameplay loop - will need a makeMove function
+            gameBoard.printBoard();
+            System.out.println("\nPick a square to try to reveal with the format 'x,y'");
+            String move = userInput.nextLine();
+            try
+            {
+                String [] moveSplit = move.split(",");
+                int col = Integer.parseInt(moveSplit[0]);
+                int row = Integer.parseInt(moveSplit[1]);
+                // Translate the users given values to the proper coordinates on the board
+                row = boardSize - row;
+                col = col - 1;
+
+                if (col < 0 || col >= boardSize || row < 0 || row >= boardSize)
+                    System.out.println("\nInvalid Move - Keep the x and y values in the range of the board\n");
+                else
+                {
+                    moveCord.col = col;
+                    moveCord.row = row;
+                    gameBoard.makeMove(moveCord);
+                }
+            }
+            catch (Exception invalidMove) 
+            {
+                System.out.println("\nInvalid Move - Please follow the 'x,y' format\n");
+            }
         }
     }
 }
