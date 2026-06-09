@@ -1,4 +1,6 @@
 import java.util.Random;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 /* Object Description
 A board object is primarily focused on a 2D array of Squares simply named 'board'.
@@ -158,22 +160,56 @@ public class Board
 
         if (this.board[row][col].value == 0)
         {
-            // Branch out revealed squares if its a zero block
-            Coordinate[] touchingCords = move.touchingCoordinates(boardSize);
-            for (int i = 0; i < touchingCords.length; i++)
-            {
-                if (touchingCords[i] != null)
-                {
-                    this.board[touchingCords[i].row][touchingCords[i].col].revealed = true;
+            // Keep track which coordinates are used to make a 'touchingCords' call to prevent an infinite loop of checks through the board
+            this.board[row][col].revealed = true;
+            ArrayList<Coordinate> checkedCords = new ArrayList<Coordinate>();
+            checkedCords.add(move);
 
-                    // TODO: finish implementing the branching out 
+            ArrayList<Coordinate> touchingCords = new ArrayList<Coordinate>(Arrays.asList(move.touchingCoordinates(boardSize)));
+            for (int i = 0; i < touchingCords.size(); i++)
+            {
+                if (touchingCords.get(i) != null)
+                {
+                    this.board[touchingCords.get(i).row][touchingCords.get(i).col].revealed = true;
+
+                    // For further zero squares found in the branching path, append their touchingCoordinates onto the 'touchingCords' master list
+                    if (this.board[touchingCords.get(i).row][touchingCords.get(i).col].value == 0)
+                    {
+                        // Mark the newly found zero Coordinate as checked and then generate a list of the Coordinate touching it
+                        Coordinate currZeroCord = new Coordinate(touchingCords.get(i).row, touchingCords.get(i).col);
+                        checkedCords.add(currZeroCord);
+                        ArrayList<Coordinate> branchingCoordinates = new ArrayList<Coordinate>(Arrays.asList(currZeroCord.touchingCoordinates(boardSize)));
+
+                        // Loop through the list of touching Coordinates for the newly found zero square, but only add it to the master list
+                        // 'touchingCords' if it has not already been checked
+                        for (int k = 0; k < branchingCoordinates.size(); k++)
+                        {
+                            boolean alreadyChecked = false;
+                            for (int j = 0; j < checkedCords.size(); j++)
+                            {
+                                if (branchingCoordinates.get(k) == checkedCords.get(j))
+                                {
+                                    alreadyChecked = true;
+                                }
+                            }
+
+                            if (!alreadyChecked)
+                            {
+                                touchingCords.add(branchingCoordinates.get(k));
+                            }
+                        }
+                        touchingCords.addAll(branchingCoordinates);
+                    }
                 }
             }
 
             return 0;
         }
         else if (this.board[row][col].value != 9)
+        {
+            this.board[row][col].revealed = true;
             return 0;
+        }
         else
             return 1;
     }
