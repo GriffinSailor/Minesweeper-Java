@@ -150,6 +150,18 @@ public class Board
         System.out.println();
     }
 
+    // Print the board after revealing all squares specifically for when the player loses
+    public void revealBoard()
+    {
+        for (int i = 0; i < this.boardSize; i++)
+        {
+            for (int k = 0; k < this.boardSize; k++)
+            {
+                if (this.board[i][k].value != 9)
+                this.board[i][k].revealed = true;
+            }
+        }
+    }
     // Reveal a square as requested by the player
     // Return a 0 for a passed move and 1 for a bomb
     // Input validation should have taken place before the function call. Assume the values are valid
@@ -160,54 +172,39 @@ public class Board
 
         if (this.board[row][col].value == 0)
         {
-            // Keep track which coordinates are used to make a 'touchingCords' call to prevent an infinite loop of checks through the board
             this.board[row][col].revealed = true;
+            this.revealedSquares++;
+
+            // Keep track which coordinates are used to make a 'touchingCords' call to prevent an infinite loop of checks through the board
             ArrayList<Coordinate> checkedCords = new ArrayList<Coordinate>();
             checkedCords.add(move);
 
-            ArrayList<Coordinate> touchingCords = new ArrayList<Coordinate>(Arrays.asList(move.touchingCoordinates(boardSize)));
+            // Create the initial array of values that touch the current 0 coordinate
+            ArrayList<Coordinate> touchingCords = new ArrayList<Coordinate>();
+            touchingCords.addAll(Arrays.asList(move.touchingCoordinates(boardSize)));
+
             for (int i = 0; i < touchingCords.size(); i++)
             {
-                if (touchingCords.get(i) != null)
+                if (touchingCords.get(i) != null && !checkedCords.contains(touchingCords.get(i)))
                 {
                     this.board[touchingCords.get(i).row][touchingCords.get(i).col].revealed = true;
+                    checkedCords.add(touchingCords.get(i));
+                    this.revealedSquares++;
 
                     // For further zero squares found in the branching path, append their touchingCoordinates onto the 'touchingCords' master list
                     if (this.board[touchingCords.get(i).row][touchingCords.get(i).col].value == 0)
                     {
-                        // Mark the newly found zero Coordinate as checked and then generate a list of the Coordinate touching it
-                        Coordinate currZeroCord = new Coordinate(touchingCords.get(i).row, touchingCords.get(i).col);
-                        checkedCords.add(currZeroCord);
-                        ArrayList<Coordinate> branchingCoordinates = new ArrayList<Coordinate>(Arrays.asList(currZeroCord.touchingCoordinates(boardSize)));
-
-                        // Loop through the list of touching Coordinates for the newly found zero square, but only add it to the master list
-                        // 'touchingCords' if it has not already been checked
-                        for (int k = 0; k < branchingCoordinates.size(); k++)
-                        {
-                            boolean alreadyChecked = false;
-                            for (int j = 0; j < checkedCords.size(); j++)
-                            {
-                                if (branchingCoordinates.get(k) == checkedCords.get(j))
-                                {
-                                    alreadyChecked = true;
-                                }
-                            }
-
-                            if (!alreadyChecked)
-                            {
-                                touchingCords.add(branchingCoordinates.get(k));
-                            }
-                        }
-                        touchingCords.addAll(branchingCoordinates);
+                        touchingCords.addAll(Arrays.asList(touchingCords.get(i).touchingCoordinates(boardSize)));
                     }
                 }
             }
 
             return 0;
-        }
+        } 
         else if (this.board[row][col].value != 9)
         {
             this.board[row][col].revealed = true;
+            this.revealedSquares++;
             return 0;
         }
         else

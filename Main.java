@@ -89,10 +89,10 @@ public class Main extends Board
 
         // Make the official game board and send the user into the gameplay loop
         gameBoard = new Board (boardSize, bombCount, firstMoveCord);
+        gameBoard.makeMove(firstMoveCord);
 
         while (!gameLost)
         {
-            // TODO: implement the actual gameplay loop - will need a makeMove function
             gameBoard.printBoard();
             System.out.println("\nPick a square to try to reveal with the format 'x,y'");
             String move = userInput.nextLine();
@@ -111,7 +111,22 @@ public class Main extends Board
                 {
                     moveCord.col = col;
                     moveCord.row = row;
-                    gameBoard.makeMove(moveCord);
+
+                    // Game over - either win or lose
+                    if (gameBoard.makeMove(moveCord) == 1)
+                    {
+                        gameBoard.revealBoard();
+                        gameBoard.printBoard();
+                        System.out.println("\nBOOM - YOU LOSE!!!\n");
+                        userInput.close();
+                        return;
+                    }
+                    else if (bombCount == ((gameBoard.boardSize * gameBoard.boardSize) - gameBoard.revealedSquares))
+                    {
+                        System.out.println("\nCONGRATULATIONS - YOU WIN!!!\n");
+                        userInput.close();
+                        return;
+                    }
                 }
             }
             catch (Exception invalidMove) 
